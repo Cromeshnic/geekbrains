@@ -79,3 +79,39 @@ public class MainApp {
         return sum;
     }
 }
+
+/**
+ * stdout:
+ * ru.dsi.geekbrains.testproject.exceptions.MyException: Task 'Task #2 [test2]' already exists in repository
+ * ru.dsi.geekbrains.testproject.exceptions.MyArraySizeException: Incorrect array size. Required: [4,4]. Actual rows 3
+ * 	at ru.dsi.geekbrains.testproject.MainApp.arraySum(MainApp.java:64)
+ * 	at ru.dsi.geekbrains.testproject.MainApp.main(MainApp.java:21)
+ * ru.dsi.geekbrains.testproject.exceptions.MyArraySizeException: Incorrect array size. Required: [4,4]. Actual cols at row[0] = 3
+ * 	at ru.dsi.geekbrains.testproject.MainApp.arraySum(MainApp.java:69)
+ * 	at ru.dsi.geekbrains.testproject.MainApp.main(MainApp.java:28)
+ * ru.dsi.geekbrains.testproject.exceptions.MyArrayDataException: NumberFormatException at [0][0] :null
+ * 	at ru.dsi.geekbrains.testproject.MainApp.arraySum(MainApp.java:75)
+ * 	at ru.dsi.geekbrains.testproject.MainApp.main(MainApp.java:35)
+ * arr[0][0] = 0
+ * arr[0][1] = 1
+ * arr[0][2] = 2
+ * arr[0][3] = 0
+ * arr[1][0] = 1
+ * arr[1][1] = 2
+ * arr[1][2] = 3
+ * arr[1][3] = 1
+ * arr[2][0] = 2
+ * arr[2][1] = 3
+ * arr[2][2] = 4
+ * arr[2][3] = 2
+ * arr[3][0] = 3
+ * arr[3][1] = 4
+ * arr[3][2] = 5
+ * arr[3][3] = 3
+ * ru.dsi.geekbrains.testproject.exceptions.MyArrayDataException: NumberFormatException at [1][1] :weird
+ * 36
+ * 	at ru.dsi.geekbrains.testproject.MainApp.arraySum(MainApp.java:75)
+ * 	at ru.dsi.geekbrains.testproject.MainApp.main(MainApp.java:55)
+ *
+ * Process finished with exit code 0
+ */
