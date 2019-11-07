@@ -6,7 +6,7 @@ class TaskService{
     private TaskRepository taskRepository;
 
     public TaskService() {
-        this.taskRepository = new TaskRepositorySimple();
+        this.taskRepository = new LinkedListTaskRepository();
     }
 
     public void addTask(Task task){
