@@ -2,23 +2,47 @@ package ru.dsi.geekbrains.testproject;
 
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 import ru.dsi.geekbrains.testproject.homework6.PhoneDictionary;
+import ru.dsi.geekbrains.testproject.homework7.*;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class MainApp {
+    public static final int CARS_COUNT = 4;
 
     public static void main(String[] args) {
-        /*Task t1 = new Task(1,"test1", "Me");
-        Task t2 = new Task(2, "test2", "Myself");
-        TaskService tt = new TaskService();
-        tt.addTask(t1);
-        tt.addTask(t2);
-        tt.addTask(t2);
-        tt.addTask(null);
-        tt.removeTask(2);
-        tt.printTasks();*/
-        homework6_1();
-        homework6_2();
+        homework7();
+    }
+
+    public static void homework7(){
+        CountDownLatch startCountdown = new CountDownLatch(CARS_COUNT);
+        CountDownLatch finishCountdown = new CountDownLatch(CARS_COUNT);
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
+        FinishStage finish = new FinishStage(CARS_COUNT, finishCountdown);
+        Race race = new Race(new StartStage(CARS_COUNT, startCountdown), new Road(60), new Tunnel(CARS_COUNT/2), new Road(40), finish);
+        Car[] cars = new Car[CARS_COUNT];
+        for (int i = 0; i < cars.length; i++) {
+            cars[i] = new Car(race, 20 + (int) (Math.random() * 10));
+        }
+        for (int i = 0; i < cars.length; i++) {
+            new Thread(cars[i]).start();
+        }
+
+        try {
+            startCountdown.await();
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            finishCountdown.await();
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Поздравление победителя : "+finish.getWinner().getName());
+
     }
 
     public static void homework6_1(){
