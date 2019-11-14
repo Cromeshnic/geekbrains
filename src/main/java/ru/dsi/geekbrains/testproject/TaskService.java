@@ -2,6 +2,10 @@ package ru.dsi.geekbrains.testproject;
 
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 class TaskService{
     private TaskRepository taskRepository;
 
@@ -43,11 +47,36 @@ class TaskService{
 
     public void printTasks(){
         System.out.println("Tasks:");
-        Task[] tasks = taskRepository.getTasks();
-        for (int i = 0; i < tasks.length; i++) {
-            System.out.println(tasks[i]);
+        List<Task> tasks = taskRepository.getTasks();
+        if(tasks!=null){
+            tasks.forEach(System.out::println);
         }
+        /*for (int i = 0; i < tasks.length; i++) {
+            System.out.println(tasks[i]);
+        }*/
         System.out.println("---");
     }
 
+    //a.
+    public List<Task> getTasksByStatus(String status){
+        return this.taskRepository.getTasks().stream()
+                .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+                .collect(Collectors.toList());
+    }
+    //b.
+    public boolean taskExists(long id){
+        return this.taskRepository.getTasks().stream().anyMatch(task -> task.getId()==id);
+    }
+    //c.
+    public List<Task> getTasksSortedByStatus(){
+        return this.taskRepository.getTasks().stream()
+                .sorted(Comparator.comparing(task -> Utils.maskNull(task.getStatus())))
+                .collect(Collectors.toList());
+    }
+    //d.
+    public long getTaskCountByStatus(String status){
+        return this.taskRepository.getTasks().stream()
+                .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+                .count();
+    }
 }

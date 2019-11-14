@@ -3,6 +3,9 @@ package ru.dsi.geekbrains.testproject;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 import ru.dsi.geekbrains.testproject.exceptions.MyRepositorySizeException;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TaskRepositorySimple implements TaskRepository {
     private Task[] tasks;
 
@@ -14,8 +17,8 @@ public class TaskRepositorySimple implements TaskRepository {
         this.tasks = new Task[size];
     }
 
-    public Task[] getTasks() {
-        return tasks.clone();
+    public List<Task> getTasks() {
+        return Arrays.asList(tasks.clone());
     }
 
     //2

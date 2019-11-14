@@ -12,6 +12,14 @@ class Task {
         this.id = id;
         this.title = title;
         this.owner = owner;
+        this.status="";
+    }
+
+    public Task(long id, String title, String owner, String status) {
+        this.id = id;
+        this.title = title;
+        this.owner = owner;
+        this.status = status;
     }
 
     @Override
