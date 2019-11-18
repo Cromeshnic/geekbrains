@@ -2,7 +2,9 @@ package ru.dsi.geekbrains.testproject;
 
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class LinkedListTaskRepository implements TaskRepository {
     private LinkedList<Task> tasks;
@@ -12,8 +14,8 @@ public class LinkedListTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Task[] getTasks() {
-        return tasks.toArray(new Task[tasks.size()]);
+    public List<Task> getTasks() {
+        return new ArrayList<>(tasks);
     }
 
     @Override
