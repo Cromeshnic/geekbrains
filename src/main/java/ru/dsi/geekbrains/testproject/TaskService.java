@@ -3,6 +3,8 @@ package ru.dsi.geekbrains.testproject;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
 import java.io.*;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,15 +12,20 @@ import java.util.stream.Collectors;
 class TaskService{
     private TaskRepository taskRepository;
 
-    public TaskService() {
-        this.taskRepository = new LinkedListTaskRepository();
+    public TaskService() throws MyException{
+        //this.taskRepository = new LinkedListTaskRepository();
+        try {
+            this.taskRepository = new SQLiteTaskRepository("data/tasks.db", true);
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new MyException("Невозможно инициализировать репозиторий", e);
+        }
     }
 
     public void addTask(Task task){
         try {
             this.taskRepository.addTask(task);
         } catch (MyException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -26,7 +33,7 @@ class TaskService{
         try {
             this.taskRepository.removeTask(id);
         } catch (MyException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -34,7 +41,7 @@ class TaskService{
         try {
             this.taskRepository.removeTask(title);
         } catch (MyException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -42,43 +49,65 @@ class TaskService{
         try {
             this.taskRepository.removeTask(task);
         } catch (MyException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
     public void printTasks(){
         System.out.println("Tasks:");
-        List<Task> tasks = taskRepository.getTasks();
+        List<Task> tasks = null;
+        try {
+            tasks = taskRepository.getTasks();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
         if(tasks!=null){
             tasks.forEach(System.out::println);
         }
-        /*for (int i = 0; i < tasks.length; i++) {
-            System.out.println(tasks[i]);
-        }*/
         System.out.println("---");
     }
 
     //a.
     public List<Task> getTasksByStatus(String status){
-        return this.taskRepository.getTasks().stream()
-                .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
-                .collect(Collectors.toList());
+        try {
+            return this.taskRepository.getTasks().stream()
+                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+                    .collect(Collectors.toList());
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
     //b.
     public boolean taskExists(long id){
-        return this.taskRepository.getTasks().stream().anyMatch(task -> task.getId()==id);
+        try {
+            return this.taskRepository.getTasks().stream().anyMatch(task -> task.getId()==id);
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     //c.
     public List<Task> getTasksSortedByStatus(){
-        return this.taskRepository.getTasks().stream()
-                .sorted(Comparator.comparing(task -> Utils.maskNull(task.getStatus())))
-                .collect(Collectors.toList());
+        try {
+            return this.taskRepository.getTasks().stream()
+                    .sorted(Comparator.comparing(task -> Utils.maskNull(task.getStatus())))
+                    .collect(Collectors.toList());
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
     //d.
     public long getTaskCountByStatus(String status){
-        return this.taskRepository.getTasks().stream()
-                .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
-                .count();
+        try {
+            return this.taskRepository.getTasks().stream()
+                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+                    .count();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public void exportToFile(List<Task> tasks, File file) throws IOException {
