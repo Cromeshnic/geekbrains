@@ -2,6 +2,7 @@ package ru.dsi.geekbrains.testproject;
 
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
+import java.io.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,5 +79,17 @@ class TaskService{
         return this.taskRepository.getTasks().stream()
                 .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
                 .count();
+    }
+
+    public void exportToFile(List<Task> tasks, File file) throws IOException {
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))){
+            out.writeObject(tasks);
+        }
+    }
+
+    public List<Task> loadFromFile(File file) throws IOException, ClassNotFoundException {
+        try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
+            return (List<Task>) in.readObject();
+        }
     }
 }

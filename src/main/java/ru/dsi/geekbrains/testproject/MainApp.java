@@ -4,6 +4,8 @@ import ru.dsi.geekbrains.testproject.exceptions.MyException;
 import ru.dsi.geekbrains.testproject.homework6.PhoneDictionary;
 import ru.dsi.geekbrains.testproject.homework7.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -11,7 +13,28 @@ public class MainApp {
     public static final int CARS_COUNT = 4;
 
     public static void main(String[] args) {
-        homework8();
+        homework9();
+    }
+
+    public static void homework9(){
+        TaskService taskService = new TaskService();
+        taskService.addTask(new Task(1,"first", "Alice","open"));
+        taskService.addTask(new Task(2,"second", "Bob","open"));
+        taskService.addTask(new Task(3,"third", "Alice","in progress"));
+        taskService.addTask(new Task(4,"weird", "Alice",null));
+        taskService.addTask(new Task(5,"old", "Clark","closed"));
+        taskService.addTask(new Task(6,"oldest", "Bob","closed"));
+
+        try {
+            File f = new File("tasks");
+            taskService.exportToFile(taskService.getTasksSortedByStatus(), f);
+            for (Task task : taskService.loadFromFile(f)) {
+                System.out.println(task);
+            }
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void homework8(){

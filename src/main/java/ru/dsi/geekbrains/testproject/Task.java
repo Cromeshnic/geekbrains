@@ -1,6 +1,10 @@
 package ru.dsi.geekbrains.testproject;
 
-class Task {
+import java.io.Serializable;
+
+class Task implements Serializable {
+    private static final long serialVersionUID = 8213894426665978662L;
+
     private long id;
     private String title;
     private String owner;
