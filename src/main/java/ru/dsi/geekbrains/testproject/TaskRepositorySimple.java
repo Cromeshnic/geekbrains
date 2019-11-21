@@ -22,6 +22,7 @@ public class TaskRepositorySimple implements TaskRepository {
     }
 
     //2
+    @Override
     public void addTask(Task task) throws MyException {
         if(task==null){
             throw new MyException("task is null");
@@ -41,7 +42,8 @@ public class TaskRepositorySimple implements TaskRepository {
         throw new MyRepositorySizeException(this.tasks.length);
     }
 
-    public Task getTask(long id){
+    @Override
+    public Task getTask(long id) {
         for (int i = 0; i < tasks.length; i++) {
             if(tasks[i]!=null && tasks[i].getId()==id){
                 return tasks[i];
@@ -51,6 +53,7 @@ public class TaskRepositorySimple implements TaskRepository {
     }
 
     //4
+    @Override
     public void removeTask(long id) throws MyException {
         for (int i = 0; i < tasks.length; i++) {
             if (tasks[i] != null && tasks[i].getId() == id) {
@@ -61,6 +64,7 @@ public class TaskRepositorySimple implements TaskRepository {
         throw new MyException("Task id ="+id+" not found in repository");
     }
 
+    @Override
     public void removeTask(String title) throws MyException{
         if (title == null) {
             throw new MyException("Task title is null", new NullPointerException());
@@ -74,6 +78,7 @@ public class TaskRepositorySimple implements TaskRepository {
         throw new MyException("Task with title ='"+title+"' not found in repository");
     }
 
+    @Override
     public void removeTask(Task task) throws MyException{
         if (task == null) {
             throw new MyException("Task is null", new NullPointerException());

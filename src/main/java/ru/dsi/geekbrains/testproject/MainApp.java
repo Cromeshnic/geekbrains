@@ -13,11 +13,38 @@ public class MainApp {
     public static final int CARS_COUNT = 4;
 
     public static void main(String[] args) {
-        homework9();
+        homework10();
+    }
+
+    public static void homework10(){
+        TaskService taskService = null;
+        try {
+            taskService = new TaskService();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
+        taskService.addTask(new Task(1,"first", "Alice","open"));
+        taskService.addTask(new Task(2,"second", "Bob","open"));
+        taskService.addTask(new Task(3,"third", "Alice","in progress"));
+        taskService.addTask(new Task(4,"weird", "Alice",null));
+        taskService.addTask(new Task(5,"old", "Clark","closed"));
+        taskService.addTask(new Task(6,"oldest", "Bob","closed"));
+
+        taskService.removeTask(2);
+        System.out.println(taskService.taskExists(2));
+        System.out.println(taskService.taskExists(5));
+        taskService.removeTask("third");
+
+        taskService.printTasks();
     }
 
     public static void homework9(){
-        TaskService taskService = new TaskService();
+        TaskService taskService = null;
+        try {
+            taskService = new TaskService();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
         taskService.addTask(new Task(1,"first", "Alice","open"));
         taskService.addTask(new Task(2,"second", "Bob","open"));
         taskService.addTask(new Task(3,"third", "Alice","in progress"));
@@ -38,7 +65,12 @@ public class MainApp {
     }
 
     public static void homework8(){
-        TaskService taskService = new TaskService();
+        TaskService taskService = null;
+        try {
+            taskService = new TaskService();
+        } catch (MyException e) {
+            e.printStackTrace();
+        }
         taskService.addTask(new Task(1,"first", "Alice","open"));
         taskService.addTask(new Task(2,"second", "Bob","open"));
         taskService.addTask(new Task(3,"third", "Alice","in progress"));
