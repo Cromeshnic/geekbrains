@@ -3,23 +3,24 @@ package ru.dsi.geekbrains.testproject;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class TaskService{
+class TaskService implements AutoCloseable{
     private TaskRepository taskRepository;
 
     public TaskService() throws MyException{
         //this.taskRepository = new LinkedListTaskRepository();
-        try {
+        /*try {
             this.taskRepository = new SQLiteTaskRepository("data/tasks.db", true);
         } catch (ClassNotFoundException | SQLException e) {
             throw new MyException("Невозможно инициализировать репозиторий", e);
-        }
+        }*/
+        this.taskRepository = new HibernateTaskRepository(true);
     }
+
 
     public void addTask(Task task){
         try {
@@ -120,5 +121,10 @@ class TaskService{
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
             return (List<Task>) in.readObject();
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        taskRepository.close();
     }
 }

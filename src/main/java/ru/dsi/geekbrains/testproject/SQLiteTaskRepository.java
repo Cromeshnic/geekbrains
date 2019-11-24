@@ -123,7 +123,11 @@ public class SQLiteTaskRepository implements TaskRepository, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        this.connection.close();
+    public void close() throws MyException {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            throw new MyException(e);
+        }
     }
 }

@@ -11,4 +11,5 @@ public interface TaskRepository {
     void removeTask(long id) throws MyException;
     void removeTask(String title) throws MyException;
     void removeTask(Task task) throws MyException;
+    void close() throws MyException;
 }

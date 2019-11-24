@@ -13,7 +13,39 @@ public class MainApp {
     public static final int CARS_COUNT = 4;
 
     public static void main(String[] args) {
-        homework10();
+        homework11();
+    }
+
+    public static void homework11(){
+        //TaskService taskService = null;
+        try (TaskService taskService = new TaskService()){
+            Task task = new Task();
+            task.setTitle("first");
+            task.setOwner("Alice");
+            task.setStatus("open");
+            task.setDescription("test");
+            taskService.addTask(task);
+
+            task = new Task();
+            task.setTitle("second");
+            task.setOwner("Bob");
+            task.setStatus("open");
+            task.setDescription("test2");
+            taskService.addTask(task);
+
+            task = new Task();
+            task.setTitle("third");
+            task.setOwner("Clark");
+            task.setStatus("in progress");
+            taskService.addTask(task);
+
+            taskService.printTasks();
+
+            taskService.removeTask("second");
+            taskService.printTasks();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void homework10(){
