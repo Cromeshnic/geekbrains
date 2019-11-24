@@ -1,11 +1,17 @@
 package ru.dsi.geekbrains.testproject;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 import ru.dsi.geekbrains.testproject.homework6.PhoneDictionary;
 import ru.dsi.geekbrains.testproject.homework7.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -13,7 +19,38 @@ public class MainApp {
     public static final int CARS_COUNT = 4;
 
     public static void main(String[] args) {
-        homework11();
+        try {
+            homework12();
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void homework12() throws IOException, URISyntaxException {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+
+        TaskService taskService = context.getBean("taskService", TaskService.class);
+
+        //Инициализируем базу вручную
+        EntityManagerFactory factory = context.getBean("entityManagerFactory", EntityManagerFactory.class);
+        EntityManager entityManager = factory.createEntityManager();
+        entityManager.getTransaction().begin();
+        Files.lines(Paths.get(MainApp.class.getClassLoader().getResource("full.sql").toURI()))
+                .forEach(s -> entityManager.createNativeQuery(s).executeUpdate());
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+        taskService.printTasks();
+
+        taskService.removeTask("second");
+        taskService.printTasks();
+
+        try {
+            taskService.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        context.close();
     }
 
     public static void homework11(){
