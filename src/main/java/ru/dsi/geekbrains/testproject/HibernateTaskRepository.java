@@ -25,7 +25,7 @@ public class HibernateTaskRepository implements TaskRepository, AutoCloseable{
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws MyException {
         this.factory.close();
     }
 
