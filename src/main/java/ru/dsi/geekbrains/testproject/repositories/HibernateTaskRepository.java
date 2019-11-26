@@ -1,46 +1,29 @@
-package ru.dsi.geekbrains.testproject;
+package ru.dsi.geekbrains.testproject.repositories;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import ru.dsi.geekbrains.testproject.entities.Task;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public class HibernateTaskRepository implements TaskRepository{
-    private EntityManagerFactory factory;
+@Transactional
+public class HibernateTaskRepository implements TaskRepository {
+    private SessionFactory factory;
 
     public HibernateTaskRepository() {
 
     }
 
     @Autowired
-    @Qualifier(value = "entityManagerFactory")
-    public void setFactory(EntityManagerFactory factory) {
+    @Qualifier(value = "sessionFactory")
+    public void setFactory(SessionFactory factory) {
         this.factory = factory;
-    }
-
-    @Override
-    public void close() throws MyException {
-    }
-
-    protected void createTables(){
-        EntityManager entityManager = factory.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("DROP TABLE IF EXISTS task").executeUpdate();
-        entityManager.createNativeQuery("CREATE TABLE task (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "title TEXT," +
-                "owner TEXT, " +
-                "assignee TEXT, " +
-                "description TEXT, " +
-                "status TEXT " +
-                ")").executeUpdate();
-        entityManager.createNativeQuery("insert into sqlite_sequence (name,seq) values (\"task_id\",1)").executeUpdate();
-        entityManager.getTransaction().commit();
-        entityManager.close();
     }
 
     @Override

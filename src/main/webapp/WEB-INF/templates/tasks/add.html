@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Task tracker - add task</title>
+</head>
+
+<body>
+<h1 th:if="${newId}">Task added</h1>
+
+<form th:action="@{/tasks/add}" method="POST" th:object="${task}">
+    Title: <input th:field="*{title}"/><br/>
+    Status: <input th:field="*{status}"/><br/>
+    Owner: <input th:field="*{owner}"/><br/>
+    Assignee: <input th:field="*{assignee}"/><br/><br/>
+    Description: <input th:field="*{description}"/><br/><br/>
+    <input type="submit"/>
+</form>
+
+<br>
+<a th:href="@{/}">main</a>
+</body>
+</html>

@@ -1,5 +1,6 @@
-package ru.dsi.geekbrains.testproject;
+package ru.dsi.geekbrains.testproject.repositories;
 
+import ru.dsi.geekbrains.testproject.entities.Task;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
 import java.util.List;
@@ -11,5 +12,4 @@ public interface TaskRepository {
     void removeTask(long id) throws MyException;
     void removeTask(String title) throws MyException;
     void removeTask(Task task) throws MyException;
-    void close() throws MyException;
 }

@@ -1,9 +1,10 @@
-package ru.dsi.geekbrains.testproject;
+package ru.dsi.geekbrains.testproject.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.dsi.geekbrains.testproject.entities.Task;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
+import ru.dsi.geekbrains.testproject.repositories.TaskRepository;
 
 import java.io.*;
 import java.util.Collections;
@@ -12,15 +13,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-class TaskService implements AutoCloseable{
+public class TaskService{
     private TaskRepository taskRepository;
 
-    public TaskService() throws MyException{
+    public TaskService(){
 
     }
 
     @Autowired
-    @Qualifier(value = "hibernateTaskRepository")
     public void setTaskRepository(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
@@ -96,7 +96,7 @@ class TaskService implements AutoCloseable{
     public List<Task> getTasksSortedByStatus(){
         try {
             return this.taskRepository.getTasks().stream()
-                    .sorted(Comparator.comparing(task -> Utils.maskNull(task.getStatus())))
+                    .sorted(Comparator.comparing(Task::getStatus))
                     .collect(Collectors.toList());
         } catch (MyException e) {
             e.printStackTrace();
@@ -125,10 +125,5 @@ class TaskService implements AutoCloseable{
         try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
             return (List<Task>) in.readObject();
         }
-    }
-
-    @Override
-    public void close() throws Exception {
-        taskRepository.close();
     }
 }
