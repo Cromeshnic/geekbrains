@@ -1,5 +1,8 @@
 package ru.dsi.geekbrains.testproject;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import ru.dsi.geekbrains.testproject.exceptions.MyException;
 
 import java.io.*;
@@ -8,17 +11,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 class TaskService implements AutoCloseable{
     private TaskRepository taskRepository;
 
     public TaskService() throws MyException{
-        //this.taskRepository = new LinkedListTaskRepository();
-        /*try {
-            this.taskRepository = new SQLiteTaskRepository("data/tasks.db", true);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new MyException("Невозможно инициализировать репозиторий", e);
-        }*/
-        this.taskRepository = new HibernateTaskRepository(true);
+
+    }
+
+    @Autowired
+    @Qualifier(value = "hibernateTaskRepository")
+    public void setTaskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
 
