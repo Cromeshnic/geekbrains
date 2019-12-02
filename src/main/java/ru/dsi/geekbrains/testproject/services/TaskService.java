@@ -25,37 +25,24 @@ public class TaskService{
         this.taskRepository = taskRepository;
     }
 
-
-    public void addTask(Task task){
-        try {
-            this.taskRepository.addTask(task);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
+    public Task getTaskById(long id) throws MyException {
+        return this.taskRepository.getTask(id);
     }
 
-    public void removeTask(long id){
-        try {
-            this.taskRepository.removeTask(id);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
+    public void addTask(Task task) throws MyException {
+        this.taskRepository.addTask(task);
     }
 
-    public void removeTask(String title){
-        try {
-            this.taskRepository.removeTask(title);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
+    public void removeTask(long id) throws MyException {
+        this.taskRepository.removeTask(id);
     }
 
-    public void removeTask(Task task){
-        try {
-            this.taskRepository.removeTask(task);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
+    public void removeTask(String title) throws MyException {
+        this.taskRepository.removeTask(title);
+    }
+
+    public void removeTask(Task task) throws MyException {
+        this.taskRepository.removeTask(task);
     }
 
     public void printTasks(){
@@ -72,25 +59,25 @@ public class TaskService{
         System.out.println("---");
     }
 
+    //Тут вообще нужно делать движок поиска по произвольному набору полей, доступных для поиска
+    public List<Task> getTasksByStatusAndAssignee(String status, String assignee) throws MyException {
+        //Нужно по-хорошему перенести применение фильтров на уровень репозитория
+        //Для этого скорее всего нужен отдельный класс-набор фильтров, который будем прокидывать
+        return this.taskRepository.getTasks().stream()
+                .filter(task -> status==null || "".equals(status) || status.equals(task.getStatus().name()))
+                .filter(task -> assignee==null || "".equals(assignee) || assignee.equals(task.getAssignee()))
+                .collect(Collectors.toList());
+    }
+
     //a.
-    public List<Task> getTasksByStatus(String status){
-        try {
-            return this.taskRepository.getTasks().stream()
-                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+    public List<Task> getTasksByStatus(String status) throws MyException {
+        return this.taskRepository.getTasks().stream()
+                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus().name()))
                     .collect(Collectors.toList());
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
-        return Collections.emptyList();
     }
     //b.
-    public boolean taskExists(long id){
-        try {
-            return this.taskRepository.getTasks().stream().anyMatch(task -> task.getId()==id);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public boolean taskExists(long id) throws MyException {
+        return this.taskRepository.getTasks().stream().anyMatch(task -> task.getId()==id);
     }
     //c.
     public List<Task> getTasksSortedByStatus(){
@@ -107,7 +94,7 @@ public class TaskService{
     public long getTaskCountByStatus(String status){
         try {
             return this.taskRepository.getTasks().stream()
-                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus()))
+                    .filter(task -> status==null ? task.getStatus()==null : status.equals(task.getStatus().name()))
                     .count();
         } catch (MyException e) {
             e.printStackTrace();

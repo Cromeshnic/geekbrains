@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Task tracker - task detail</title>
+</head>
+
+<body>
+
+<table th:object="${task}">
+    <tr><td>Id:</td><td th:text="*{id}"></td></tr>
+    <tr><td>Title:</td><td th:text="*{title}"></td></tr>
+    <tr><td>Status:</td><td th:text="*{status}"></td></tr>
+    <tr><td>Owner:</td><td th:text="*{owner}"></td></tr>
+    <tr><td>Assignee:</td><td th:text="*{assignee}"></td></tr>
+    <tr><td>Description:</td><td th:text="*{description}"></td></tr>
+</table>
+
+</body>
+</html>
