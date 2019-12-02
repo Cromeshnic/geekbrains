@@ -1,20 +1,21 @@
-package ru.dsi.geekbrains.testproject;
+package ru.dsi.geekbrains.testproject.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.TableGenerator;
 import java.io.Serializable;
 
 @Entity
-class Task implements Serializable {
+public class Task implements Serializable {
     private static final long serialVersionUID = 8213894426665978662L;
 
     @Id
-    @GeneratedValue(generator="sqlite")
+    /*@GeneratedValue(generator="sqlite")
     @TableGenerator(name="sqlite", table="sqlite_sequence",
             pkColumnName="name", valueColumnName="seq",
-            pkColumnValue="task_id")
+            pkColumnValue="task_id")*/
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
     private String title;
