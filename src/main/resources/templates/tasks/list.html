@@ -9,7 +9,27 @@
 
 <body>
 <h1>Tasks:</h1>
+
+<form th:action="@{/tasks/show}" method="GET" >
+    <div>
+        <label for="status">Task status:</label>
+        <select id="status" name="status">
+            <option value="">--Any--</option>
+            <option
+                    th:each="stat : ${T(ru.dsi.geekbrains.testproject.entities.Task.Status).values()}"
+                    th:value="${stat.name()}"
+                    th:text="${stat.toString()}"
+                    th:attr="selected=${status.equals(stat.name())}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="assignee">Assignee:</label>
+        <input type="text" id="assignee" name="assignee" th:value="${assignee}"/>
+    </div>
+    <input type="submit" value="Search"/>
+</form>
 <table>
+
     <thead>
     <tr>
         <td>ID</td>
@@ -28,6 +48,7 @@
         <td th:text="${t.status}"></td>
         <td th:text="${t.owner}"></td>
         <td th:text="${t.assignee}"></td>
+        <td><a th:attr="href=@{/tasks/detail/{id}(id=${t.id})}" target="_blank">Detail</a></td>
     </tr>
     </tbody>
 </table>

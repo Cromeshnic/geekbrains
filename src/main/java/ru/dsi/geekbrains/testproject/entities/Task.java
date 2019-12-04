@@ -1,13 +1,12 @@
 package ru.dsi.geekbrains.testproject.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
-public class Task implements Serializable {
+public class Task{
+    public enum Status {
+        OPEN, IN_PROGRESS, CLOSED
+    }
     private static final long serialVersionUID = 8213894426665978662L;
 
     @Id
@@ -22,24 +21,27 @@ public class Task implements Serializable {
     private String owner;
     private String assignee;
     private String description;
-    private String status;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     public Task(){
         this.title="";
         this.owner="";
         this.assignee="";
         this.description="";
-        this.status="";
+        this.status=Status.OPEN;
     }
 
     public Task(long id, String title, String owner) {
         this.id = id;
         this.title = title;
         this.owner = owner;
-        this.status="";
+        this.status=Status.OPEN;
     }
 
-    public Task(long id, String title, String owner, String status) {
+    public Task(long id, String title, String owner, Status status) {
         this.id = id;
         this.title = title;
         this.owner = owner;
@@ -95,11 +97,11 @@ public class Task implements Serializable {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }
