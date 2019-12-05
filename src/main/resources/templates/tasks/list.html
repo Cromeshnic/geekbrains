@@ -18,13 +18,20 @@
             <option
                     th:each="stat : ${T(ru.dsi.geekbrains.testproject.entities.Task.Status).values()}"
                     th:value="${stat.name()}"
-                    th:text="${stat.toString()}"
-                    th:attr="selected=${status.equals(stat.name())}"></option>
+                    th:text="${stat.getName()}"
+                    th:attr="selected=${stat.equals(status)}"></option>
         </select>
     </div>
     <div>
         <label for="assignee">Assignee:</label>
-        <input type="text" id="assignee" name="assignee" th:value="${assignee}"/>
+        <select id="assignee" name="assignee">
+            <option value="">--Any--</option>
+            <option
+                    th:each="user : ${users}"
+                    th:value="${user.getId()}"
+                    th:text="${user.getName()}"
+                    th:attr="selected=${user.getId()==assignee_id}"></option>
+        </select>
     </div>
     <input type="submit" value="Search"/>
 </form>
@@ -45,10 +52,10 @@
     <tr th:each="t : ${tasks}">
         <td th:text="${t.id}"></td>
         <td th:text="${t.title}"></td>
-        <td th:text="${t.status}"></td>
-        <td th:text="${t.owner}"></td>
-        <td th:text="${t.assignee}"></td>
-        <td><a th:attr="href=@{/tasks/detail/{id}(id=${t.id})}" target="_blank">Detail</a></td>
+        <td th:text="${t.status.getName()}"></td>
+        <td th:text="${t.owner==null ? '' : t.owner.getName()}"></td>
+        <td th:text="${t.assignee==null ? '' : t.assignee.getName()}"></td>
+        <td><a th:attr="href=@{'/tasks/detail/'+ ${t.id}}" target="_blank">Detail</a></td>
     </tr>
     </tbody>
 </table>
