@@ -1,60 +1,75 @@
 package ru.dsi.geekbrains.testproject.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import ru.dsi.geekbrains.testproject.entities.Task;
-import ru.dsi.geekbrains.testproject.exceptions.MyException;
+import ru.dsi.geekbrains.testproject.repositories.specifications.TaskSpecifications;
 import ru.dsi.geekbrains.testproject.services.TaskService;
+import ru.dsi.geekbrains.testproject.services.UserService;
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
+
     @Autowired
     private TaskService taskService;
 
-    @RequestMapping(path = "/show", method = RequestMethod.GET)
-    public String showAllTasks(@RequestParam(name = "status", defaultValue = "") String status, @RequestParam(name = "assignee", defaultValue = "") String assignee, Model model) {
-        try {
-            model.addAttribute("tasks", taskService.getTasksByStatusAndAssignee(status, assignee));
-        } catch (MyException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка поиска задач");
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/show")
+    public String showAllTasks(
+            @RequestParam(name = "status", required = false) Task.Status status,
+            @RequestParam(name = "assignee", required = false) Long assignee_id,
+            @RequestParam(defaultValue = "1") Long pageNumber,
+            Model model
+    ) {
+        if (pageNumber < 1L) {
+            pageNumber = 1L;
         }
+
+        Specification<Task> spec = Specification.where(null);
+        if(null!=status){
+            spec = spec.and(TaskSpecifications.statusEq(status));
+        }
+        if(null!=assignee_id){
+            spec = spec.and(TaskSpecifications.assigneeEq(assignee_id));
+        }
+        final int tasksPerPage = 5;//TODO
+        model.addAttribute("tasks", taskService.getTasks(spec, PageRequest.of(pageNumber.intValue() - 1, tasksPerPage, Sort.Direction.ASC, "status")));
         model.addAttribute("status", status);
-        model.addAttribute("assignee", assignee);
+        model.addAttribute("assignee_id", assignee_id);
+        //Справочник юзеров. Если будет огромный, то нужно видимо делать форму поиска и подгружать динамически
+        // через Ajax при поиске, как в Jira
+        model.addAttribute("users", userService.getAll());
 
         return "tasks/list";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/add")
     public String showAddForm(Model model) {
         Task task = new Task();
         task.setTitle("New task");
         model.addAttribute("task", task);
-        return "tasks/new";
+        model.addAttribute("users", userService.getAll());
+        return "tasks/add";
     }
 
     @PostMapping("/add")
     public String processAddForm(@ModelAttribute("task") Task task, Model model) {
-        try {
-            taskService.addTask(task);
-        } catch (MyException e) {
-            e.printStackTrace();
-        }
+        taskService.save(task);
         //model.addAttribute("newId", task.getId());
-        return "redirect:/tasks/new";
+        return "redirect:/tasks/add";
     }
 
     @GetMapping("/detail/{id}")
     public String taskDetail(@PathVariable long id, Model model) {
-        try {
-            model.addAttribute("task", taskService.getTaskById(id));
-        } catch (MyException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id = "+id+" not found");
-        }
+        model.addAttribute("task", taskService.getById(id));
         return "tasks/detail";
     }
 

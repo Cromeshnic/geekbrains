@@ -1,25 +1,44 @@
 package ru.dsi.geekbrains.testproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Data;
+
 import javax.persistence.*;
 
+//@NoArgsConstructor
+@Data
 @Entity
+@Table(name = "task")
 public class Task{
     public enum Status {
-        OPEN, IN_PROGRESS, CLOSED
+        OPEN (0, "Open"), IN_PROGRESS(1, "In progress"), CLOSED(2, "Closed");
+        private int value;
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        Status(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
     }
-    private static final long serialVersionUID = 8213894426665978662L;
 
     @Id
-    /*@GeneratedValue(generator="sqlite")
-    @TableGenerator(name="sqlite", table="sqlite_sequence",
-            pkColumnName="name", valueColumnName="seq",
-            pkColumnValue="task_id")*/
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    
+    private Long id;
+
     private String title;
-    private String owner;
-    private String assignee;
+    @ManyToOne()
+    @JoinColumn(name = "owner_id")
+    @JsonManagedReference
+    private User owner;
+
+    @ManyToOne()
+    @JoinColumn(name = "assignee_id")
+    @JsonManagedReference
+    private User assignee;
     private String description;
     
     @Enumerated(EnumType.STRING)
@@ -28,24 +47,8 @@ public class Task{
 
     public Task(){
         this.title="";
-        this.owner="";
-        this.assignee="";
         this.description="";
         this.status=Status.OPEN;
-    }
-
-    public Task(long id, String title, String owner) {
-        this.id = id;
-        this.title = title;
-        this.owner = owner;
-        this.status=Status.OPEN;
-    }
-
-    public Task(long id, String title, String owner, Status status) {
-        this.id = id;
-        this.title = title;
-        this.owner = owner;
-        this.status = status;
     }
 
     @Override
@@ -61,47 +64,16 @@ public class Task{
         return this.id == ((Task) o).getId();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getAssignee() {
+    public User getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(String assignee) {
-        this.assignee = assignee;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

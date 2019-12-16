@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Task tracker - add task</title>
+</head>
+
+<body>
+<h1 th:if="${newId}">Task added</h1>
+
+<form th:action="@{/tasks/add}" method="POST" th:object="${task}">
+    <div>
+        <label for="title">Title:</label>
+        <input id="title" th:field="*{title}"/>
+    </div>
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" th:field="*{status}">
+            <option value="">--Any--</option>
+            <option
+                    th:each="stat : ${T(ru.dsi.geekbrains.testproject.entities.Task.Status).values()}"
+                    th:value="${stat.name()}"
+                    th:text="${stat.getName()}"
+                    th:attr="selected=${stat.equals(status)}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="assignee">Owner:</label>
+        <select id="owner" th:field="*{owner}">
+            <option value="">--None--</option>
+            <option
+                    th:each="user : ${users}"
+                    th:value="${user.getId()}"
+                    th:text="${user.getName()}"
+                    th:attr="selected=${user.getId()==task.owner}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="assignee">Assignee:</label>
+        <select id="assignee" th:field="*{assignee}">
+            <option value="">--None--</option>
+            <option
+                    th:each="user : ${users}"
+                    th:value="${user.getId()}"
+                    th:text="${user.getName()}"
+                    th:attr="selected=${user.getId()==task.assignee}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <input id="description" th:field="*{description}"/>
+    </div>
+    <input type="submit"/>
+</form>
+
+<br>
+<a th:href="@{/}">main</a>
+</body>
+</html>
