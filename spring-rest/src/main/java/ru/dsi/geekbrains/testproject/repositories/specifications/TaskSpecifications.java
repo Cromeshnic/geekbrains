@@ -4,7 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import ru.dsi.geekbrains.testproject.entities.Task;
 
 public class TaskSpecifications {
-    public static Specification<Task> statusEq(Task.Status status){
+    public static Specification<Task> statusEq(Integer status){
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"),status);
     }
 
