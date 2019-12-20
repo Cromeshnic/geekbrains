@@ -71,7 +71,7 @@ public class TaskController {
         return taskService.save(Task.valueOf(taskDto)).toDto();
     }
 
-    @PostMapping("/{id}")//Продусблирую на Post
+    @PostMapping("/{id}")//Продублирую на Post
     public TaskDto updatePost(@ModelAttribute("task") TaskDto taskDto, @PathVariable Long id) {
         taskDto.setId(id);//Как тут правильно?
         return taskService.save(Task.valueOf(taskDto)).toDto();

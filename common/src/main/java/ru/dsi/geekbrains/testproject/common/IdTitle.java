@@ -1,10 +1,5 @@
 package ru.dsi.geekbrains.testproject.common;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
-@Data
 public class IdTitle {
     private Long id;
     private String title;
@@ -12,5 +7,23 @@ public class IdTitle {
     public IdTitle(Long id, String title){
         this.id=id;
         this.title=title;
+    }
+
+    public IdTitle(){}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

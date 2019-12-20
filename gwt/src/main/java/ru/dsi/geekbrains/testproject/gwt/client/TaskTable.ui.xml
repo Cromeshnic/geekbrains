@@ -1,0 +1,23 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+ 		<g:DecoratorPanel>
+			<g:VerticalPanel spacing="10" width="100%">
+				<g:Label text="Status:" width="100px"/>
+				<g:ListBox ui:field="status" name="status">
+					<g:item value="">-any-</g:item>
+					<g:item value="0">Open</g:item>
+					<g:item value="1">In progress</g:item>
+					<g:item value="2">Closed</g:item>
+				</g:ListBox>
+    			<g:Label text="Assignee:" width="100px"/>
+				<g:ListBox ui:field="assignee" name="assignee">
+					<g:item value="">-any-</g:item>
+				</g:ListBox>
+				<!--<g:TextBox ui:field="assigneeId" name="assigneeId"/>-->
+				<g:Button ui:field="btnSubmit">Search</g:Button>
+				<c:CellTable ui:field="table" width="100%" pageSize="15"/>
+			</g:VerticalPanel>
+		</g:DecoratorPanel>
+
+</ui:UiBinder>

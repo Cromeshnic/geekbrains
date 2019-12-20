@@ -4,6 +4,6 @@
 insert into user(name) values('Alice');
 insert into user(name) values('Bob');
 insert into user(name) values('Clark');
-insert into task(title, assignee_id, description, status) values('first', (select id from user where name='Alice') , 'test 1', 'OPEN');
-insert into task(title, assignee_id, description, status) values('second', (select id from user where name='Bob'), 'test 2', 'OPEN');
-insert into task(title, assignee_id, description, status) values('third', (select id from user where name='Clark'), 'test 3', 'IN_PROGRESS');
+insert into task(title, assignee_id, description, status) values('first', (select id from user where name='Alice') , 'test 1', 0);
+insert into task(title, assignee_id, description, status) values('second', (select id from user where name='Bob'), 'test 2', 0);
+insert into task(title, assignee_id, description, status) values('third', (select id from user where name='Clark'), 'test 3', 1);

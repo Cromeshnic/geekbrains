@@ -21,6 +21,15 @@ public class Task{
             this.value = value;
             this.name = name;
         }
+
+        public static Status getValue(int value) {
+            for(Status e: Status.values()) {
+                if(e.value == value) {
+                    return e;
+                }
+            }
+            return null;// not found
+        }
     }
 
     @Id
@@ -39,7 +48,7 @@ public class Task{
     private User assignee;
     private String description;
     
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
     private Status status;
 
@@ -74,9 +83,11 @@ public class Task{
         taskDto.setDescription(this.description);
 
         if(this.getOwner()!=null){
+            taskDto.setOwnerId(this.getOwner().getId());
             taskDto.setOwner(new IdTitle(this.getOwner().getId(), this.getOwner().getName()));
         }
         if(this.getAssignee()!=null) {
+            taskDto.setAssigneeId(this.getAssignee().getId());
             taskDto.setAssignee(new IdTitle(this.getAssignee().getId(), this.getAssignee().getName()));
         }
 
@@ -87,9 +98,15 @@ public class Task{
         Task task = new Task();
         task.setId(taskDto.getId());
         task.setTitle(taskDto.getTitle());
-        /*if(taskDto.getAssigneeId()!=null){
-            task.setAssignee(user);
-        }*/
+        task.setDescription(taskDto.getDescription());
+        task.setStatus(Task.Status.getValue(taskDto.getStatusId()));
+
+        if(taskDto.getOwnerId()!=null){
+            task.setOwner(new User(taskDto.getOwnerId()));
+        }
+        if(taskDto.getAssigneeId()!=null){
+            task.setAssignee(new User(taskDto.getAssigneeId()));
+        }
         return task;
     }
 
