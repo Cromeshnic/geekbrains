@@ -18,6 +18,7 @@
     <inherits name='com.google.gwt.uibinder.UiBinder'/>
     <inherits name='com.google.gwt.user.cellview.CellView'/>
     <inherits name="ru.dsi.geekbrains.testproject.common"/>
+    <inherits name='com.google.gwt.storage.Storage' />
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 

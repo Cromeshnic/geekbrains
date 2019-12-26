@@ -4,6 +4,7 @@ import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -97,7 +98,9 @@ public class TaskTableWidget extends Composite {
                 new ActionCell<TaskDto>("REMOVE", new ActionCell.Delegate<TaskDto>() {
                     @Override
                     public void execute(TaskDto taskDto) {
-                        taskClient.remove(taskDto.getId().toString(), new MethodCallback<Void>() {
+                        String token = Storage.getLocalStorageIfSupported().getItem("jwt");
+                        GWT.log("STORAGE: " + token);
+                        taskClient.remove(token, taskDto.getId().toString(), new MethodCallback<Void>() {
                             @Override
                             public void onFailure(Method method, Throwable throwable) {
                                 GWT.log(throwable.toString());
@@ -124,7 +127,9 @@ public class TaskTableWidget extends Composite {
         table.setColumnWidth(actionColumn, 200, Style.Unit.PX);
 
         //Заполняем список пользователей в фильтре
-        userClient.getAll( new MethodCallback<List<UserDto>>(){
+        String token = Storage.getLocalStorageIfSupported().getItem("jwt");
+        GWT.log("STORAGE: " + token);
+        userClient.getAll(token, new MethodCallback<List<UserDto>>(){
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 GWT.log(throwable.toString());
@@ -139,8 +144,8 @@ public class TaskTableWidget extends Composite {
         });
         
         //assignee.addItem();
-
-        refresh();
+        //no refresh until asked for
+        //refresh();
     }
 
     @UiHandler("btnSubmit")
@@ -148,8 +153,10 @@ public class TaskTableWidget extends Composite {
         refresh();
     }
 
-    public void refresh() {//Integer.valueOf() Integer.valueOf()
-        taskClient.getAll(status.getSelectedValue(), assignee.getSelectedValue(), new MethodCallback<List<TaskDto>>() {
+    public void refresh() {
+        String token = Storage.getLocalStorageIfSupported().getItem("jwt");
+        GWT.log("STORAGE: " + token);
+        taskClient.getAll(token, status.getSelectedValue(), assignee.getSelectedValue(), new MethodCallback<List<TaskDto>>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 GWT.log(throwable.toString());
