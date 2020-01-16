@@ -5,8 +5,8 @@ public class TaskDto extends IdTitle{
     private Long ownerId;
     private IdTitle owner;
     private Long assigneeId;
-    private IdTitle assignee;
     private int statusId;
+    private IdTitle assignee;
     private IdTitle status;
 
     public TaskDto() {

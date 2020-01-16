@@ -6,8 +6,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.dsi.geekbrains.testproject.common.TaskDto;
+import ru.dsi.geekbrains.testproject.configs.JwtTokenUtil;
 import ru.dsi.geekbrains.testproject.entities.Task;
 import ru.dsi.geekbrains.testproject.repositories.specifications.TaskSpecifications;
 import ru.dsi.geekbrains.testproject.services.TaskService;
@@ -26,6 +29,9 @@ public class TaskController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping
     public List<TaskDto> list(
@@ -60,20 +66,36 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskDto add(@ModelAttribute("task") TaskDto taskDto) {
-        taskDto.setId(null);//Надо ли?
+    public TaskDto add(@RequestHeader("Authorization") String requestTokenHeader, @ModelAttribute("task") TaskDto taskDto) {
+        taskDto.setId(null);
+        
+        if(taskDto.getOwnerId()==null || taskDto.getAssigneeId()==null) {//Если явно не указан владелец или исполнитель - подставляем текущего юзера
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                String jwtToken = jwtTokenUtil.getTokenFromHeader(requestTokenHeader);
+                Long userId = jwtTokenUtil.extractClaim(jwtToken, claims -> claims.get("userId", Long.class));
+                if (userId != null) {
+                    if(taskDto.getOwnerId()==null){
+                        taskDto.setOwnerId(userId);
+                    }
+                    if(taskDto.getAssigneeId()==null){
+                        taskDto.setAssigneeId(userId);
+                    }
+                }
+            }
+        }
         return taskService.save(Task.valueOf(taskDto)).toDto();
     }
 
     @PutMapping("/{id}")
-    public TaskDto update(@ModelAttribute("task") TaskDto taskDto, @PathVariable Long id) {
-        taskDto.setId(id);//Как тут правильно?
+    public TaskDto update(@RequestBody TaskDto taskDto, @PathVariable Long id) {
+        taskDto.setId(id);
         return taskService.save(Task.valueOf(taskDto)).toDto();
     }
 
     @PostMapping("/{id}")//Продублирую на Post
-    public TaskDto updatePost(@ModelAttribute("task") TaskDto taskDto, @PathVariable Long id) {
-        taskDto.setId(id);//Как тут правильно?
+    public TaskDto updatePost(@RequestBody TaskDto taskDto, @PathVariable Long id) {
+        taskDto.setId(id);
         return taskService.save(Task.valueOf(taskDto)).toDto();
     }
 

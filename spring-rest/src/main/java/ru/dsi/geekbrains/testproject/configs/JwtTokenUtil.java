@@ -30,6 +30,13 @@ public class JwtTokenUtil {
 		return claimsResolver.apply(claims);
 	}
 
+	public String getTokenFromHeader(String header){
+		if(header != null && header.startsWith("Bearer ")) {
+			return header.substring(7);
+		}
+		return null;
+	}
+
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
@@ -40,8 +47,15 @@ public class JwtTokenUtil {
 	}
 
 	public String generateToken(UserDetails userDetails) {
+ 		return generateToken(userDetails, null);
+	}
+
+	public String generateToken(UserDetails userDetails, Map<String, Object> additionalClaims) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("roles", userDetails.getAuthorities());
+		if(additionalClaims!=null){
+			claims.putAll(additionalClaims);
+		}
 		return generateToken(claims, userDetails.getUsername());
 	}
 

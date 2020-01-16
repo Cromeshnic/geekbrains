@@ -15,7 +15,10 @@ import ru.dsi.geekbrains.testproject.common.JwtAuthRequestDto;
 import ru.dsi.geekbrains.testproject.common.JwtAuthResponseDto;
 import ru.dsi.geekbrains.testproject.common.UserDto;
 import ru.dsi.geekbrains.testproject.configs.JwtTokenUtil;
+import ru.dsi.geekbrains.testproject.entities.User;
 import ru.dsi.geekbrains.testproject.services.JwtUserDetailsService;
+
+import java.util.Collections;
 
 @RestController
 @CrossOrigin
@@ -40,8 +43,10 @@ public class JwtAuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        User user = userDetailsService.loadUser(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.getUserDetailsByUser(user);//userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        //Добавляем id авторизованного пользователя в claims
+        final String token = jwtTokenUtil.generateToken(userDetails, Collections.singletonMap("userId", user.getId()));
         return ResponseEntity.ok(new JwtAuthResponseDto(token));
     }
 

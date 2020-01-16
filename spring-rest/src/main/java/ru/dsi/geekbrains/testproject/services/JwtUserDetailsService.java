@@ -35,10 +35,20 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = loadUser(username);
+        return getUserDetailsByUser(user);
+    }
+
+    @Transactional
+    public User loadUser(String username) throws UsernameNotFoundException {
         User user = userRepository.findOneByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        return user;
+    }
+
+    public UserDetails getUserDetailsByUser(User user){
         Collection<? extends GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
     }
