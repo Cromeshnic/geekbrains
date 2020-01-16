@@ -14,6 +14,7 @@ import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 import ru.dsi.geekbrains.testproject.common.TaskDto;
 import ru.dsi.geekbrains.testproject.common.UserDto;
+import ru.dsi.geekbrains.testproject.common.Utils;
 
 import java.util.List;
 
@@ -92,16 +93,14 @@ public class EditTaskFormWidget extends Composite {
         task.setId(taskId);
         task.setTitle(titleText.getValue());
         task.setDescription(description.getValue());
-        task.setOwnerId(Long.valueOf(ownerId.getSelectedValue()));
-        task.setAssigneeId(Long.valueOf(assigneeId.getSelectedValue()));
-        task.setStatusId(Integer.parseInt(statusId.getSelectedValue()));
+        task.setOwnerId(Utils.toLongOrNull(ownerId.getSelectedValue()));
+        task.setAssigneeId(Utils.toLongOrNull(assigneeId.getSelectedValue()));
+        task.setStatusId(Utils.toIntegerOrNull(statusId.getSelectedValue()));
 
         taskClient.update(token, taskId, task, new MethodCallback<Void>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
-                GWT.log(throwable.toString());
-                GWT.log(throwable.getMessage());
-                Window.alert("Невозможно обновить задачу: "+throwable.getMessage());
+                Window.alert("Невозможно обновить задачу: "+method.getResponse().getText());
             }
 
             @Override

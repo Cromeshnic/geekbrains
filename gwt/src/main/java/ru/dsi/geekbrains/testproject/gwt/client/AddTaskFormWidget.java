@@ -39,19 +39,6 @@ public class AddTaskFormWidget extends Composite {
         this.taskClient = GWT.create(TaskClient.class);
     }
 
-    @UiHandler("form")
-    public void onSubmit(FormPanel.SubmitEvent event) {
-        if (titleText.getText().length() < 4) {
-            Window.alert("Название должно быть не менее 4 символов");
-            event.cancel();
-        }
-    }
-
-    /*@UiHandler("form")
-    public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-        taskTableWidget.refresh();
-    }*/
-
     @UiHandler("btnSubmit")
     public void submitClick(ClickEvent event) {
         String token = Storage.getLocalStorageIfSupported().getItem("jwt");
@@ -59,9 +46,7 @@ public class AddTaskFormWidget extends Composite {
         taskClient.add(token, statusId.getSelectedValue(), titleText.getValue(), new MethodCallback<Void>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
-                GWT.log(throwable.toString());
-                GWT.log(throwable.getMessage());
-                Window.alert("Невозможно добавить задачу: "+throwable.getMessage());
+                Window.alert("Невозможно добавить задачу: "+method.getResponse().getText());
             }
 
             @Override

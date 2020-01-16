@@ -1,15 +1,36 @@
 package ru.dsi.geekbrains.testproject.common;
 
-public class TaskDto extends IdTitle{
+import javax.validation.constraints.Size;
+
+public class TaskDto{
+    private Long id;
+    @Size(min = 4, message = "Task title is too short")
+    private String title;
     private String description;
     private Long ownerId;
     private IdTitle owner;
     private Long assigneeId;
-    private int statusId;
+    private Integer statusId;
     private IdTitle assignee;
     private IdTitle status;
 
     public TaskDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -60,11 +81,11 @@ public class TaskDto extends IdTitle{
         this.assigneeId = assigneeId;
     }
 
-    public int getStatusId() {
+    public Integer getStatusId() {
         return statusId;
     }
 
-    public void setStatusId(int statusId) {
+    public void setStatusId(Integer statusId) {
         this.statusId = statusId;
     }
 }

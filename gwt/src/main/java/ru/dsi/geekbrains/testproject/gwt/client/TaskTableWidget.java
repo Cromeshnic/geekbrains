@@ -167,9 +167,7 @@ public class TaskTableWidget extends Composite {
         taskClient.getAll(token, status.getSelectedValue(), assignee.getSelectedValue(), new MethodCallback<List<TaskDto>>() {
             @Override
             public void onFailure(Method method, Throwable throwable) {
-                GWT.log(throwable.toString());
-                GWT.log(throwable.getMessage());
-                Window.alert("Невозможно получить список задач: Сервер не отвечает");
+                Window.alert("Невозможно получить список задач: "+method.getResponse().getText());
             }
 
             @Override
@@ -184,8 +182,7 @@ public class TaskTableWidget extends Composite {
         userClient.getAll(token, new MethodCallback<List<UserDto>>(){
             @Override
             public void onFailure(Method method, Throwable throwable) {
-                GWT.log(throwable.toString());
-                GWT.log(throwable.getMessage());
+                Window.alert("Невозможно получить список пользователей: "+method.getResponse().getText());
             }
             @Override
             public void onSuccess(Method method, List<UserDto> userDtoList) {

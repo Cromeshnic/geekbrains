@@ -72,6 +72,7 @@ public class LoginForm extends Composite {
             @Override
             public void onFailure(Method method, Throwable throwable) {
                 GWT.log(method.getResponse().getText());
+                Window.alert(method.getResponse().getText());
             }
 
             @Override
